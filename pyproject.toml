@@ -1,0 +1,150 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "semantic-bus"
+version = "0.1.0"
+description = "Semantic Bus implementing the Liquid Interface Protocol (LIP) for agent-based systems"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [
+    { name = "Dhiogo", email = "dhiogo.correa@draiven.io" }
+]
+dependencies = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.5.0",
+    "websockets>=12.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+# Development dependencies
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "httpx>=0.25.0",
+    "ruff>=0.1.0",
+    "mypy>=1.7.0",
+]
+
+# SQLite storage (single-node)
+sqlite = [
+    "sqlalchemy[asyncio]>=2.0.0",
+    "aiosqlite>=0.19.0",
+]
+
+# PostgreSQL storage (distributed production)
+postgresql = [
+    "sqlalchemy[asyncio]>=2.0.0",
+    "asyncpg>=0.29.0",
+]
+
+# MySQL storage
+mysql = [
+    "sqlalchemy[asyncio]>=2.0.0",
+    "aiomysql>=0.2.0",
+]
+
+# Redis for distributed presence/exec
+redis = [
+    "redis>=5.0.0",
+]
+
+# Kafka for high-throughput task queue
+kafka = [
+    "aiokafka>=0.10.0",
+]
+
+# RabbitMQ for reliable message queuing
+rabbitmq = [
+    "aio-pika>=9.0.0",
+]
+
+# All message queue backends
+queues = [
+    "redis>=5.0.0",
+    "aiokafka>=0.10.0",
+    "aio-pika>=9.0.0",
+]
+
+# LangChain 1.2.0 for semantic matching - unified model interface
+langchain = [
+    "langchain>=1.2.0",
+    "langgraph>=1.0.0",  # For agent workflow graphs
+]
+
+# LangChain with Azure OpenAI provider
+langchain-azure = [
+    "langchain>=1.2.0",
+    "langgraph>=1.0.0",
+    "langchain-openai>=0.2.0",  # Azure uses openai package
+]
+
+# LangChain with Anthropic provider
+langchain-anthropic = [
+    "langchain>=1.2.0",
+    "langgraph>=1.0.0",
+    "langchain-anthropic>=0.3.0",
+]
+
+# LangChain with Google Gemini provider
+langchain-google = [
+    "langchain>=1.2.0",
+    "langgraph>=1.0.0",
+    "langchain-google-genai>=2.0.0",
+]
+
+# LangChain with local models (Ollama)
+langchain-ollama = [
+    "langchain>=1.2.0",
+    "langgraph>=1.0.0",
+    "langchain-ollama>=0.2.0",
+]
+
+# All LLM providers
+langchain-all = [
+    "langchain>=1.2.0",
+    "langchain-openai>=0.2.0",
+    "langchain-anthropic>=0.3.0",
+    "langchain-google-genai>=2.0.0",
+    "langchain-ollama>=0.2.0",
+]
+
+# All storage backends
+storage = [
+    "sqlalchemy[asyncio]>=2.0.0",
+    "aiosqlite>=0.19.0",
+    "asyncpg>=0.29.0",
+    "aiomysql>=0.2.0",
+    "redis>=5.0.0",
+]
+
+# Full installation with all optional dependencies
+all = [
+    "semantic-bus[dev,storage,queues,langchain-all]",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests", "scripts"]
+python_files = ["test_*.py"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
+ignore = ["E501"]  # Line too long handled by formatter
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
