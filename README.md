@@ -2,7 +2,7 @@
   <img src="sematicbus.png" alt="Semantic Bus" width="400">
   <h1 align="center">Semantic Bus</h1>
   <p align="center">
-    <strong>Liquid Interface Protocol (LIP) Implementation for Agent-Based Systems</strong>
+    <strong><a href="https://github.com/draiven-io/liquid-interfaces">Liquid Interface Protocol (LIP)</a> Implementation for Agent-Based Systems</strong>
   </p>
   <p align="center">
     Intent-based negotiation • Ephemeral interfaces • IBAC governance
@@ -738,7 +738,7 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 ## Acknowledgments
 
-Semantic Bus implements the concepts described in the **Liquid Interface Protocol (LIP)** specification. Special thanks to the research on intent-based agent communication and ephemeral interface patterns.
+Semantic Bus implements the concepts described in the **[Liquid Interface Protocol (LIP)](https://github.com/draiven-io/liquid-interfaces)** specification. Special thanks to the research on intent-based agent communication and ephemeral interface patterns.
 
 ---
 
