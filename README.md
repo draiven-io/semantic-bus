@@ -223,6 +223,104 @@ pip install -e ".[all]"
 
 ---
 
+## Docker
+
+### Build the Image
+
+```bash
+# Build production image with default extras (postgresql, redis, langchain)
+docker build -t semantic-bus .
+
+# Build with specific optional dependencies
+docker build --build-arg INSTALL_EXTRAS="postgresql,redis,langchain-azure" -t semantic-bus .
+
+# Build with all dependencies
+docker build --build-arg INSTALL_EXTRAS="all" -t semantic-bus .
+
+# Build development image with hot-reload
+docker build --target development -t semantic-bus:dev .
+```
+
+### Run the Container
+
+```bash
+# Run production container
+docker run -p 8000:8000 \
+  -e LIP_LLM_PROVIDER=azure \
+  -e LIP_AZURE_OPENAI_API_KEY=your-key \
+  -e LIP_AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com \
+  semantic-bus
+
+# Run with environment file
+docker run -p 8000:8000 --env-file .env semantic-bus
+
+# Run development container with volume mount for hot-reload
+docker run -p 8000:8000 -v $(pwd):/app semantic-bus:dev
+```
+
+### Docker Compose (Example)
+
+```yaml
+version: '3.8'
+
+services:
+  semantic-bus:
+    build:
+      context: .
+      args:
+        INSTALL_EXTRAS: "postgresql,redis,langchain-azure"
+    ports:
+      - "8000:8000"
+    environment:
+      - LIP_DATABASE_URL=postgresql+asyncpg://postgres:postgres@db/semantic_bus
+      - LIP_REDIS_URL=redis://redis:6379
+      - LIP_LLM_PROVIDER=azure
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: semantic_bus
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
+```
+
+### Available Build Extras
+
+| Extra | Description |
+|-------|-------------|
+| `dev` | Development tools (pytest, ruff, mypy) |
+| `sqlite` | SQLite storage backend |
+| `postgresql` | PostgreSQL storage backend |
+| `mysql` | MySQL storage backend |
+| `redis` | Redis for distributed presence/queues |
+| `kafka` | Kafka for high-throughput streaming |
+| `rabbitmq` | RabbitMQ for reliable messaging |
+| `queues` | All queue backends (redis, kafka, rabbitmq) |
+| `langchain` | Base LangChain for semantic matching |
+| `langchain-azure` | LangChain with Azure OpenAI |
+| `langchain-anthropic` | LangChain with Anthropic |
+| `langchain-google` | LangChain with Google Gemini |
+| `langchain-ollama` | LangChain with local Ollama models |
+| `langchain-all` | All LLM providers |
+| `storage` | All storage backends |
+| `all` | Everything |
+
+---
+
 ## Quick Start
 
 ### 1. Configure Environment
